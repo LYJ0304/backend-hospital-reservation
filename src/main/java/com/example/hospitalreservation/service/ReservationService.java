@@ -49,9 +49,9 @@ public class ReservationService {
         if (reservation == null) {
             throw new IllegalArgumentException("예약을 찾을 수 없습니다.");
         }
-        reservation.setStatus("canceled");
-        reservation.setCancellationReason(cancellationReason);
-        reservation.setCanceledAt(LocalDateTime.now());
+//        reservation.setStatus("canceled");
+//        reservation.setCancellationReason(cancellationReason);
+//        reservation.setCanceledAt(LocalDateTime.now());
         reservationRepository.update(reservation);
         logger.info("Reservation {} canceled. Reason: {}", id, cancellationReason);
     }
