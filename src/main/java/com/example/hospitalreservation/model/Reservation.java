@@ -7,6 +7,7 @@ public class Reservation {
     private Long doctorId;
     private Long patientId;
     private LocalDateTime reservationTime;
+    public Reservation reservation;
 
     private String status; // 예약 상태: 예약됨, 취소됨
     private String cancellationReason; // 취소 사유
@@ -17,6 +18,7 @@ public class Reservation {
         this.patientId = patientId;
         this.reservationTime = reservationTime;
         this.status = "RESERVED";
+        this.reservation = reservation;
     }
 
     public static Reservation of(Long doctorId, Long patientId, LocalDateTime reservationTime) {

@@ -2,12 +2,13 @@ package com.example.hospitalreservation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.hospitalreservation.service.ReservationService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-@RestController
+@Controller
 @RequestMapping("/reservations")
 public class ReservationController {
 

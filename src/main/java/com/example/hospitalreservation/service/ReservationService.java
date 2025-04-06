@@ -25,6 +25,10 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public Reservation getReservationById(Long id) {
+        return reservationRepository.findById(id);
+    }
+
     public Reservation createReservation(Long doctorId, Long patientId, LocalDateTime reservationTime) {
         LocalDateTime startTime = reservationTime.withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endTime = startTime.plusMinutes(1);
@@ -36,6 +40,28 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(doctorId, patientId, reservationTime);
         return reservationRepository.save(reservation);
+    }
+
+    public Reservation updateReservation(Long id, Reservation updated) {
+        Reservation existing = reservationRepository.findById(id);
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setDoctorId(updated.getDoctorId());
+        existing.setPatientId(updated.getPatientId());
+        existing.setReservationTime(updated.getReservationTime());
+        existing.setStatus(updated.getStatus());
+
+        return reservationRepository.update(existing);
+    }
+
+    public void deleteReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation != null) {
+            reservationRepository.delete(id);
+            logger.info("Reservation {} deleted.", id);
+        }
     }
 
     public void cancelReservation(Long id, String cancellationReason) {
@@ -51,4 +77,4 @@ public class ReservationService {
         reservationRepository.update(reservation);
         logger.info("Reservation {} canceled. Reason: {}", id, cancellationReason);
     }
-}
+}}

@@ -23,10 +23,6 @@ public class ReservationRepository {
         return reservation;
     }
 
-    public void deleteById(Long id) {
-        reservations.removeIf(reservation -> reservation.getId().equals(id));
-    }
-
     public Reservation findById(Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
@@ -34,13 +30,18 @@ public class ReservationRepository {
                 .orElse(null);
     }
 
-    public void update(Reservation reservation) {
+    public Reservation update(Reservation updated) {
         for (int i = 0; i < reservations.size(); i++) {
-            if (reservations.get(i).getId().equals(reservation.getId())) {
-                reservations.set(i, reservation);
-                break;
+            if (reservations.get(i).getId().equals(updated.getId())) {
+                reservations.set(i, updated);
+                return updated;
             }
         }
+        return null;
+    }
+
+    public void delete(Long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 
     public boolean existsByDoctorIdAndReservationTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end) {
@@ -50,4 +51,3 @@ public class ReservationRepository {
                         reservation.getReservationTime().isBefore(end));
     }
 }
-
