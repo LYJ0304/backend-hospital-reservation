@@ -4,18 +4,15 @@ import com.example.hospitalreservation.model.Reservation;
 import com.example.hospitalreservation.repository.ReservationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO : 서비스 레이어에서 필요한 어노테이션을 작성해주세요.
 @Service
 public class ReservationService {
 
-    // TODO : 주입 받아야 객체를 작성해주세요.
     private final ReservationRepository reservationRepository;
     private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
@@ -24,12 +21,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    // TODO : 모든 예약 리스트를 조회하는 코드를 작성해주세요.
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
-    // TODO : 새로운 예약을 생성하는 코드를 작성해주세요.
     public Reservation createReservation(Long doctorId, Long patientId, LocalDateTime reservationTime) {
         LocalDateTime startTime = reservationTime.withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endTime = startTime.plusMinutes(1);
@@ -43,17 +38,17 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    // TODO : 예약을 취소하는 코드를 작성해주세요.
     public void cancelReservation(Long id, String cancellationReason) {
         Reservation reservation = reservationRepository.findById(id);
         if (reservation == null) {
             throw new IllegalArgumentException("예약을 찾을 수 없습니다.");
         }
-//        reservation.setStatus("canceled");
-//        reservation.setCancellationReason(cancellationReason);
-//        reservation.setCanceledAt(LocalDateTime.now());
+
+        reservation.setStatus("CANCELED");
+        reservation.setCancellationReason(cancellationReason);
+        reservation.setCanceledAt(LocalDateTime.now());
+
         reservationRepository.update(reservation);
         logger.info("Reservation {} canceled. Reason: {}", id, cancellationReason);
     }
-
 }

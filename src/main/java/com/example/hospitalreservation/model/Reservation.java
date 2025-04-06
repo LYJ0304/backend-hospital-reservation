@@ -8,11 +8,15 @@ public class Reservation {
     private Long patientId;
     private LocalDateTime reservationTime;
 
-    // TODO : 필요한 메서드가 있다면 작성해주세요.
+    private String status; // 예약 상태: 예약됨, 취소됨
+    private String cancellationReason; // 취소 사유
+    private LocalDateTime canceledAt; // 취소 시간
+
     public Reservation(Long doctorId, Long patientId, LocalDateTime reservationTime) {
         this.doctorId = doctorId;
         this.patientId = patientId;
         this.reservationTime = reservationTime;
+        this.status = "RESERVED";
     }
 
     public static Reservation of(Long doctorId, Long patientId, LocalDateTime reservationTime) {
@@ -49,5 +53,29 @@ public class Reservation {
 
     public void setReservationTime(LocalDateTime reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
+
+    public LocalDateTime getCanceledAt() {
+        return canceledAt;
+    }
+
+    public void setCanceledAt(LocalDateTime canceledAt) {
+        this.canceledAt = canceledAt;
     }
 }
