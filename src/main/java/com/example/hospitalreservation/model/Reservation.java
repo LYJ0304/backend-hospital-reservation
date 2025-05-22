@@ -1,83 +1,55 @@
 package com.example.hospitalreservation.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 public class Reservation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long doctorId;
-    private Long patientId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
     private LocalDateTime reservationTime;
-    public Reservation reservation;
 
-    private String status; // 예약 상태: 예약됨, 취소됨
-    private String cancellationReason; // 취소 사유
-    private LocalDateTime canceledAt; // 취소 시간
+    private String status; // RESERVED, CANCELLED
 
-    public Reservation(Long doctorId, Long patientId, LocalDateTime reservationTime) {
-        this.doctorId = doctorId;
-        this.patientId = patientId;
+    private String cancellationReason;
+    private LocalDateTime canceledAt;
+
+    protected Reservation() {}
+
+    public Reservation(Doctor doctor, Patient patient, LocalDateTime reservationTime) {
+        this.doctor = doctor;
+        this.patient = patient;
         this.reservationTime = reservationTime;
         this.status = "RESERVED";
-        this.reservation = reservation;
     }
 
-    public static Reservation of(Long doctorId, Long patientId, LocalDateTime reservationTime) {
-        return new Reservation(doctorId, patientId, reservationTime);
+    public static Reservation of(Doctor doctor, Patient patient, LocalDateTime reservationTime) {
+        return new Reservation(doctor, patient, reservationTime);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
-    }
-
-    public LocalDateTime getReservationTime() {
-        return reservationTime;
-    }
-
-    public void setReservationTime(LocalDateTime reservationTime) {
-        this.reservationTime = reservationTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCancellationReason() {
-        return cancellationReason;
-    }
-
-    public void setCancellationReason(String cancellationReason) {
-        this.cancellationReason = cancellationReason;
-    }
-
-    public LocalDateTime getCanceledAt() {
-        return canceledAt;
-    }
-
-    public void setCanceledAt(LocalDateTime canceledAt) {
-        this.canceledAt = canceledAt;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public Doctor getDoctor() { return doctor; }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
+    public Patient getPatient() { return patient; }
+    public void setPatient(Patient patient) { this.patient = patient; }
+    public LocalDateTime getReservationTime() { return reservationTime; }
+    public void setReservationTime(LocalDateTime reservationTime) { this.reservationTime = reservationTime; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getCancellationReason() { return cancellationReason; }
+    public void setCancellationReason(String cancellationReason) { this.cancellationReason = cancellationReason; }
+    public LocalDateTime getCanceledAt() { return canceledAt; }
+    public void setCanceledAt(LocalDateTime canceledAt) { this.canceledAt = canceledAt; }
 }

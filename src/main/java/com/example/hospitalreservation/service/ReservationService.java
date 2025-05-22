@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -26,7 +27,7 @@ public class ReservationService {
     }
 
     public Reservation getReservationById(Long id) {
-        return reservationRepository.findById(id);
+        return reservationRepository.findById(id).orElse(null);
     }
 
     public Reservation createReservation(Long doctorId, Long patientId, LocalDateTime reservationTime) {
@@ -43,38 +44,39 @@ public class ReservationService {
     }
 
     public Reservation updateReservation(Long id, Reservation updated) {
-        Reservation existing = reservationRepository.findById(id);
-        if (existing == null) {
+        Optional<Reservation> optionalExisting = reservationRepository.findById(id);
+        if (optionalExisting.isEmpty()) {
             return null;
         }
 
-        existing.setDoctorId(updated.getDoctorId());
-        existing.setPatientId(updated.getPatientId());
+        Reservation existing = optionalExisting.get();
+        existing.setDoctor(updated.getDoctor());
+        existing.setPatient(updated.getPatient());
         existing.setReservationTime(updated.getReservationTime());
         existing.setStatus(updated.getStatus());
 
-        return reservationRepository.update(existing);
+        return reservationRepository.save(existing); // save()는 수정도 가능
     }
 
     public void deleteReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id);
-        if (reservation != null) {
-            reservationRepository.delete(id);
+        if (reservationRepository.existsById(id)) {
+            reservationRepository.deleteById(id);
             logger.info("Reservation {} deleted.", id);
         }
     }
 
     public void cancelReservation(Long id, String cancellationReason) {
-        Reservation reservation = reservationRepository.findById(id);
-        if (reservation == null) {
+        Optional<Reservation> optional = reservationRepository.findById(id);
+        if (optional.isEmpty()) {
             throw new IllegalArgumentException("예약을 찾을 수 없습니다.");
         }
 
+        Reservation reservation = optional.get();
         reservation.setStatus("CANCELED");
         reservation.setCancellationReason(cancellationReason);
         reservation.setCanceledAt(LocalDateTime.now());
 
-        reservationRepository.update(reservation);
+        reservationRepository.save(reservation);
         logger.info("Reservation {} canceled. Reason: {}", id, cancellationReason);
     }
 }
