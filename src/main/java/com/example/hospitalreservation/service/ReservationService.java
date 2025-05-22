@@ -77,4 +77,4 @@ public class ReservationService {
         reservationRepository.update(reservation);
         logger.info("Reservation {} canceled. Reason: {}", id, cancellationReason);
     }
-}}
+}
